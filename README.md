@@ -168,7 +168,7 @@ class Datatables extends CI_Controller {
     );
 
     $config = array(
-      'request'         => $this->input->post(), // or get from /application/users/index
+      'request'         => $this->input->post(), // or get from /application/controllers/users/index
       'table'           => 'datatable_users',
       'where_result'    => FALSE,
       'where_all'       => 'place_id = 447',
