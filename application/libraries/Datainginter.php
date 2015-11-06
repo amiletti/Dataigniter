@@ -4,7 +4,6 @@ class Datainginter {
 
   protected $CI;
   protected $config;
-  protected $range_delimiter;
 
   public function __construct($config = array())
   {
