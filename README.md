@@ -1,5 +1,5 @@
 # Dataigniter
-A library to make simple work with Codeigniter and Datatable Server Side Processing. This sample work with sqlite, just copy all repository in your vh and visit http://yourpath.com/index.php/users
+A library to make simple work with [Codeigniter](https://codeigniter.com/) and [Datatable](https://www.datatables.net/) [Server Side Processing](https://www.datatables.net/examples/server_side/). This sample work with sqlite, just copy all repository in your vh and visit http://yourpath.com/index.php/users
 
 # What's inside
 * /application/libraries/Dataigniter.php // obviously
