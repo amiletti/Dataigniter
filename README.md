@@ -1,7 +1,7 @@
 # Dataigniter
 A library who make simple to work with [Codeigniter](https://codeigniter.com/) and [Datatable](https://www.datatables.net/) [Server Side Processing](https://www.datatables.net/examples/server_side/).
 
-This sample work with [sqlite](https://sqlite.org/). In order to try it you need a base [LAMP](https://it.wikipedia.org/wiki/LAMP_(piattaforma) or [WAMP](https://it.wikipedia.org/wiki/WAMP) stack. Just copy all repository in your localhost and visit http://localhost/index.php/users (I haven't used .htaccess)
+This sample work with [sqlite](https://sqlite.org/). In order to try it you need a base [LAMP](https://it.wikipedia.org/wiki/LAMP_(piattaforma)) or [WAMP](https://it.wikipedia.org/wiki/WAMP) stack. Just copy all repository in your localhost and visit http://localhost/index.php/users (I haven't used .htaccess)
 
 # What's inside
 * /application/libraries/Dataigniter.php // obviously
