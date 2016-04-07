@@ -125,7 +125,7 @@ class Datainginter {
 
         if($v['searchable'] == 'true')
         {
-          $global_search[] = "`".$column['db']."` ".$this->bind($str);
+          $global_search[] = "`".$column['db']."` ".$this->bind($str, 'string');
         }
       }
     }
@@ -140,7 +140,8 @@ class Datainginter {
         $str = $v['search']['value'];
         if($v['searchable'] == 'true' && $str != '')
         {
-          $column_search[] = "`".$column['db']."` ".$this->bind($str);
+          $ct = (isset($column['ct'])) ? $column['ct'] : 'string';
+          $column_search[] = "`".$column['db']."` ".$this->bind($str, $ct);
         }
       }
     }
@@ -223,15 +224,11 @@ class Datainginter {
     return $ret;
   }
 
-  public function bind($val)
+  public function bind($val, $ct = 'string')
   {
     $q = '';
 
-    if(is_numeric($val))
-    {
-      $q = " = ".$this->CI->db->escape($val)." ";
-    }
-    else if(strrpos($val, $this->config['range_delimiter']) !== FALSE)
+    if(strrpos($val, $this->config['range_delimiter']) !== FALSE)
     {
       $t = explode($this->config['range_delimiter'], $val);
       
@@ -250,7 +247,18 @@ class Datainginter {
     }
     else
     {
-      $q = " LIKE '%".$this->CI->db->escape_like_str($val)."%'";
+      switch($ct)
+      {
+        case 'number':
+          $q = " = ".$this->CI->db->escape($val)." ";
+          break;
+        case 'string':
+          $q = " LIKE '%".$this->CI->db->escape_like_str($val)."%'";
+          break;
+        default:
+          $q = " LIKE '%".$this->CI->db->escape_like_str($val)."%'";
+          break;
+      }
     }
 
     return $q;

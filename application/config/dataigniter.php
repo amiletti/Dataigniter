@@ -15,7 +15,11 @@ $config['users'] = array(
       'post_formatter' => function($v, $row) { return ($v) ? '<a href="mailto:'.$v.'">'.$v.'</a>' : ''; }
     ),
     array('dt' => 4, 'db' => 'country'),
-    array('dt' => 5, 'db' => 'ip_address'),
+    array(
+      'dt' => 5,
+      'db' => 'ip_address', 
+      'ct' => 'string' // define column type to force correct casting
+    ),
     array(
       'dt' => 6, 
       'db' => 'logged_at',
