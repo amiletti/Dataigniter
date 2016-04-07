@@ -18,7 +18,7 @@ $config['users'] = array(
     array(
       'dt' => 5,
       'db' => 'ip_address', 
-      'ct' => 'string' // define column type to force correct casting
+      'ct' => 'string' // define column type to force correct casting available is 'string' or 'number'
     ),
     array(
       'dt' => 6, 
