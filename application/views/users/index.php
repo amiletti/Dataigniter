@@ -22,6 +22,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
     <script src="/assets/js/jquery.dataTables.yadcf.js"></script>
@@ -75,13 +76,47 @@
   <script>
   $(document).ready(function() {
 
-    var oTable = $('#users').DataTable({
-      "processing": true,
-      "serverSide": true,
-      "ajax": {
-        "type": "POST",
-        "url": "/index.php/users/dataigniter"
+    function dt_format_output_date(columns) {
+      $.each(columns, function(i, v) {
+        var t = v.search.value.split('-yadcf_delim-');
+        if(t.length == 2) {
+          var str = "";
+          if(moment(t[0], 'DD-MM-YYYY', true).isValid()) { str += moment(t[0], 'DD-MM-YYYY').format('YYYY-MM-DD'); }
+          str += '-yadcf_delim-';
+          if(moment(t[1], 'DD-MM-YYYY', true).isValid()) { str += moment(t[1], 'DD-MM-YYYY').format('YYYY-MM-DD [23:59:59]'); }
+          columns[i].search.value = str;
+        }
+      });
+      return columns;
+    }
+
+    function dt_format_input_date(date) {
+      if(moment(date, 'YYYY-MM-DD HH:mm:ss', true).isValid()) {
+        return moment(date, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY');
       }
+      if(moment(date, 'YYYY-MM-DD', true).isValid()) {
+        return moment(date, 'YYYY-MM-DD').format('DD-MM-YYYY');
+      }
+      return '';
+    }
+
+    var oTable = $('#users').DataTable( {
+      "serverSide" : true,
+      "processing" : true,
+      "ajax"       : {
+        "type" : "post",
+        "url"  : "/index.php/users/dataigniter",
+        "data" : function(d) { d.columns = dt_format_output_date(d.columns); }
+      },
+      "columns"    : [
+        { "data" : "user_id", "type" : "num" },
+        { "data" : "first_name" },
+        { "data" : "last_name" },
+        { "data" : "email" },
+        { "data" : "country" },
+        { "data" : "ip_address" },
+        { "data" : "logged_at", "render" : function(data, type, row) { return dt_format_input_date(data); } }
+      ]
     });
 
     yadcf.init(
@@ -93,7 +128,7 @@
         { "column_number": 3, "filter_type": "text" },
         { "column_number": 4, "filter_type": "text" },
         { "column_number": 5, "filter_type": "text" },
-        { "column_number": 6, "filter_type": "range_date", "date_format": "dd-mm-yyyy" }
+        { "column_number": 6, "filter_type": "range_date" }
       ],
       'footer'
     );

@@ -18,7 +18,7 @@ class Users extends CI_Controller {
 
     $config['request'] = $this->input->post();
     
-    $this->load->library('Datainginter', $config);
-    echo json_encode($this->datainginter->get_data());
+    $this->load->library('Dataigniter', $config);
+    echo json_encode($this->dataigniter->get_data());
   }
 }

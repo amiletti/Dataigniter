@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Datainginter {
+class Dataigniter {
 
   protected $CI;
   protected $config;
@@ -9,24 +9,46 @@ class Datainginter {
   {
     $this->CI     =& get_instance();
     $this->config = $config;
-    $this->init_data_input();
+
+    $this->init();
   }
 
-  public function init_data_input()
+  function init()
   {
-    $request = $this->config['request'];
-    $columns = $this->config['columns'];
-
-    foreach($request['columns'] as $k => $v)
+    $table = $this->config['table'];
+    
+    // autodefine columns
+    switch($this->CI->db->dbdriver)
     {
-      foreach($columns as $k2 => $v2)
-      {
-        if($v2['dt'] == $v['data'] && isset($v2['pre_formatter']))
+      case 'mysqli':
+        $q = "DESCRIBE {$table}";
+        $r = $this->CI->db->query($q)->result();
+        foreach($r as $k => $v)
         {
-          $t = $v2['pre_formatter']($request['columns'][$k]['search']['value'], $this->config);
-          $this->config['request']['columns'][$k]['search']['value'] = $t;
+          $this->config['columns'][] = array(
+            'dt' => $v->Field, 
+            'db' => $v->Field,
+            'ct' => (stripos($v->Type, 'int') !== FALSE) ? 'number' : 'string'
+          );
         }
-      }
+        break;
+
+      case 'sqlite3':
+        $q = "PRAGMA table_info({$table})";
+        $r = $this->CI->db->query($q)->result();
+        foreach($r as $k => $v)
+        {
+          $this->config['columns'][] = array(
+            'dt' => $v->name, 
+            'db' => $v->name,
+            'ct' => (stripos($v->type, 'int') !== FALSE) ? 'number' : 'string'
+          );
+        }
+        break;
+      
+      default:
+        # code...
+        break;
     }
 
     return;
@@ -40,17 +62,7 @@ class Datainginter {
     {
       $row = array();
 
-      foreach($columns as $k2 => $v2)
-      {
-        if(isset($v2['post_formatter']))
-        {
-          $row[$v2['dt']] = $v2['post_formatter']($v[$v2['db']], $v);
-        }
-        else
-        {
-          $row[$v2['dt']] = $v[$v2['db']];
-        }
-      }
+      foreach($columns as $k2 => $v2) { $row[$v2['dt']] = $v[$v2['db']]; }
 
       $out[] = $row;
     }
